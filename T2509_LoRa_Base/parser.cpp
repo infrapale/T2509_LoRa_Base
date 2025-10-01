@@ -371,7 +371,7 @@ void parser_task(void)
             parser_rd_msg_fields(&msg_data, &RxStr);
             parser_set_data(&msg_data);
             parser_print_data(&msg_data);
-            parser_exec_command(&rfm_ctrl.tx_msg, &msg_data);
+            //parser_exec_command(&rfm_ctrl.tx_msg, &msg_data);
             Serial.println(rfm_ctrl.rx_msg.field.cmnd);
             Serial.println(rfm_ctrl.rx_msg.field.base_nbr);
 

@@ -86,7 +86,7 @@ typedef struct
   cmd_et    tag_indx;
   uint8_t   nbr_values;
   int16_t   value[CMD_MAX_VALUES];
-  char      field[CMD_MAX_VALUES][8];
+  char      field[CMD_MAX_VALUES][CMD_FIELD_LEN];
   uint8_t   target;
   uint8_t   sender;
   float     temperature;
