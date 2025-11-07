@@ -342,6 +342,7 @@ void rfm_task(void)
                     Serial.print("To Serial1: ");
                     Serial.println((char*)rfm_ctrl.rec_msg);
                     Serial1.println((char*)rfm_ctrl.rec_msg);
+                    Serial2.println((char*)rfm_ctrl.rec_msg);
                     // Serial.print("RSSI: ");  Serial.println(rfm_ctrl.rssi, DEC);
                     rfm_task_handle.state = 16;
                     rfm_timeout = millis() + 100;
