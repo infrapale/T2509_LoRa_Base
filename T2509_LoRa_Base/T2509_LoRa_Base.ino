@@ -55,6 +55,9 @@ void setup()
     // deactivate watchdog
     delay(2000);
   }
+  else {
+    delay(2000);
+  }
 
   //while (!Serial) ; // Wait for serial port to be available
   Serial.print(APP_NAME); Serial.print(" Compiled: ");

@@ -331,18 +331,21 @@ void rfm_task(void)
                     if(rfm_ctrl.rec_msg_len < RH_RF95_MAX_MESSAGE_LEN-1 )
                     {
                         rfm_ctrl.rec_msg[rfm_ctrl.rec_msg_len] = 0x00;
-                        //Serial1.println((char*)rfm_ctrl.rec_msg);
+                        Serial.println((char*)rfm_ctrl.rec_msg);
+                        Serial.flush();
                     }
-                    parser_radio_reply(rfm_ctrl.rec_msg, rfm_ctrl.rssi);
+                    //parser_radio_reply(rfm_ctrl.rec_msg, rfm_ctrl.rssi);
                     rfm_ctrl.server_cntr++;
 
 
                     rfm_ctrl.rssi = rf95.lastRssi(); 
                     io_blink(COLOR_BLUE, BLINK_FAST_BLINK);
-                    Serial.print("To Serial1: ");
-                    Serial.println((char*)rfm_ctrl.rec_msg);
+                    // Serial.print("To Serial1: ");
+                    // Serial.println((char*)rfm_ctrl.rec_msg);
                     Serial1.println((char*)rfm_ctrl.rec_msg);
+                    Serial1.flush();
                     Serial2.println((char*)rfm_ctrl.rec_msg);
+                    Serial2.flush();
                     // Serial.print("RSSI: ");  Serial.println(rfm_ctrl.rssi, DEC);
                     rfm_task_handle.state = 16;
                     rfm_timeout = millis() + 100;
