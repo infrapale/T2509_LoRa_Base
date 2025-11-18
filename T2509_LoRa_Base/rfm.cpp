@@ -323,11 +323,13 @@ void rfm_task(void)
         case 15:
             if (rf95.available())
             {
+                delay(5);
                 // Should be a message for us now   
                 if (rf95.recv(rfm_ctrl.rec_msg, &rfm_ctrl.rec_msg_len))
                 {
                     rfm_ctrl.reply_status =  REPLY_REQUEST;
                     rfm_ctrl.rssi = rf95.lastRssi();
+                    Serial.printf("Len=%d  RSSI: %d \n",rfm_ctrl.rec_msg_len, rfm_ctrl.rssi);
                     if(rfm_ctrl.rec_msg_len < RH_RF95_MAX_MESSAGE_LEN-1 )
                     {
                         rfm_ctrl.rec_msg[rfm_ctrl.rec_msg_len] = 0x00;
@@ -346,7 +348,6 @@ void rfm_task(void)
                     Serial1.flush();
                     Serial2.println((char*)rfm_ctrl.rec_msg);
                     Serial2.flush();
-                    // Serial.print("RSSI: ");  Serial.println(rfm_ctrl.rssi, DEC);
                     rfm_task_handle.state = 16;
                     rfm_timeout = millis() + 100;
                     }
