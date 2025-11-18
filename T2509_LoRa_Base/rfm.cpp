@@ -52,6 +52,11 @@ void rfm_initialize(node_role_et node_role)
     }
     rfm_ctrl.rec_msg_len    = sizeof(rfm_ctrl.rec_msg);
     rfm_ctrl.send_msg_len   = sizeof(rfm_ctrl.send_msg);
+    Serial.printf("Buffers: %d %d %d \n", 
+        RH_RF95_MAX_MESSAGE_LEN,
+        rfm_ctrl.rec_msg_len,
+        rfm_ctrl.send_msg_len );
+
 }
 
 void rfm_task_initilaize(void)
@@ -208,7 +213,8 @@ void loop_server(void)
         case 10:
             if (rf95.available())
             {
-                // Should be a message for us now   
+                // Should be a message for us now  
+                delay(5); 
                 if (rf95.recv(rfm_ctrl.rec_msg, &rfm_ctrl.rec_msg_len))
                 {
                     rfm_ctrl.reply_status =  REPLY_REQUEST;
@@ -325,6 +331,7 @@ void rfm_task(void)
             {
                 delay(5);
                 // Should be a message for us now   
+                rfm_ctrl.rec_msg_len    = sizeof(rfm_ctrl.rec_msg);
                 if (rf95.recv(rfm_ctrl.rec_msg, &rfm_ctrl.rec_msg_len))
                 {
                     rfm_ctrl.reply_status =  REPLY_REQUEST;
