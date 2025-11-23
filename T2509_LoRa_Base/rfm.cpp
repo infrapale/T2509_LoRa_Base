@@ -11,6 +11,7 @@ https://www.airspayce.com/mikem/arduino/RadioHead/
 #include "io.h"
 #include "rfm.h"
 #include "parser.h"
+#include "boss.h"
 
 
 // Singleton instance of the radio driver
@@ -43,7 +44,10 @@ void rfm_initialize(node_role_et node_role)
         rfm_ctrl.node_role = node_role;
         rfm_set_frequency(867.5);
         rfm_set_power(14);
-        rfm_set_modem_conf(0);
+     
+        if (main_ctrl.long_range_modulation) rfm_set_modem_conf(3);
+        else rfm_set_modem_conf(0);
+
     }
     else
     {
@@ -345,7 +349,7 @@ void rfm_task(void)
                     }
                     //parser_radio_reply(rfm_ctrl.rec_msg, rfm_ctrl.rssi);
                     rfm_ctrl.server_cntr++;
-
+                    boss_activity_event();
 
                     rfm_ctrl.rssi = rf95.lastRssi(); 
                     io_blink(COLOR_BLUE, BLINK_FAST_BLINK);

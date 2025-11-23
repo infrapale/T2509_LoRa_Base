@@ -11,10 +11,9 @@
 
 #define APP_NAME   "T2509_LoRa_Base"
 #define SW_BM_TEST          0b00001000
-#define SW_BM_ROLE          0b00000100
-#define SW_BM_ADDR_1        0b00000010
-#define SW_BM_ADDR_0        0b00000001
-#define SW_BM_ADDR          0b00000011
+#define SW_BM_WATCHDOG      0b00000100
+#define SW_BM_MODULATION    0b00000010
+#define SW_BM_FAST_MODE     0b00000001
 #define DEBUG_PRINT
 
 #define UART_0              Serial
@@ -32,13 +31,15 @@ typedef enum
 
 typedef struct 
 {
-    uint8_t      node_addr;
-    node_role_et node_role;
-    bool         test_activated;
-    bool         io_initialized;
-    uint8_t      serial_reserved;
+    uint8_t         node_addr;
+    node_role_et    node_role;
+    bool            test_activated;
+    bool            io_initialized;
+    uint8_t         serial_reserved;
+    bool            fast_mode;
+    bool            long_range_modulation;
+    bool            watchdog_active;
 } main_ctrl_st;
-
 
 
 

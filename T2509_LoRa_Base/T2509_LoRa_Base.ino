@@ -1,6 +1,7 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
+#include "boss.h"
 #include "rfm.h"
 #include "main.h"
 #include "io.h"
@@ -25,7 +26,19 @@
 
 void debug_print_task(void) {atask_print_status(true);}
 
-main_ctrl_st main_ctrl = { 0, NODE_ROLE_UNDEFINED, false, false, 0 };
+
+
+main_ctrl_st main_ctrl = {
+    .node_addr  = 0,
+    .node_role  = NODE_ROLE_UNDEFINED, 
+    .test_activated = false,
+    .io_initialized = false,
+    .serial_reserved = 0,
+    .long_range_modulation = false,
+    .watchdog_active = false, 
+};
+
+
 //                                  123456789012345      ival  next  state  prev  cntr flag  call backup
 atask_st debug_print_handle      = {"Debug Print    ",   5000, 0,    0,     255,  0,   1, debug_print_task};
 
@@ -48,43 +61,32 @@ void setup()
 
   io_initialize();
   uint8_t sw_bm = io_get_switch_bm();
-  if ((sw_bm & SW_BM_TEST) == 0)
-  {
-    main_ctrl.test_activated = true;
-    while (!Serial) ; // Wait for serial port to be available
-    // deactivate watchdog
-    delay(2000);
-  }
-  else {
-    delay(2000);
-  }
+  if ((sw_bm & SW_BM_TEST) == 0) main_ctrl.test_activated = true;
+  if ((sw_bm & SW_BM_WATCHDOG) == 0) main_ctrl.watchdog_active = true;
+  if ((sw_bm & SW_BM_MODULATION) == 0) main_ctrl.long_range_modulation = true;
+  if ((sw_bm & SW_BM_FAST_MODE) == 0) main_ctrl.fast_mode = true;   // Obsolete
+
+  
+  if(main_ctrl.test_activated ) {while (!Serial) {};}
+  else delay(2000);
+
 
   //while (!Serial) ; // Wait for serial port to be available
   Serial.print(APP_NAME); Serial.print(" Compiled: ");
   Serial.print(__DATE__); Serial.print(" ");
   Serial.print(__TIME__); Serial.println();
-  Serial1.println("Serial1");
+
+  
   if(main_ctrl.test_activated) Serial.println("Test Mode is Activated");
-  if ((sw_bm & SW_BM_ROLE) != 0)  
-  {
-    Serial.print("Client ");
-    main_ctrl.node_role = NODE_ROLE_CLIENT;
-  }
-  else 
-  {
-    Serial.print("Server ");
-    main_ctrl.node_role = NODE_ROLE_SERVER;
-  }  
-  main_ctrl.node_addr =  sw_bm & SW_BM_ADDR;
-  Serial.printf("Node Address %d\n", main_ctrl.node_addr);
+  if(main_ctrl.watchdog_active) Serial.println("Watchdog is Activated");
+  if(main_ctrl.long_range_modulation) Serial.println("Long Range is Activated");
+
 
   rfm_initialize(main_ctrl.node_role); 
   rfm_task_initilaize();
+  boss_initialize(main_ctrl.watchdog_active);
   parser_initialize();
-  //if(main_ctrl.test_activated)
-  {
-    //atask_add_new(&debug_print_handle);
-  }
+  if(main_ctrl.test_activated)atask_add_new(&debug_print_handle);
 }
 
 void setup1(void)
